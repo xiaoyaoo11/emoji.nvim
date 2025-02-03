@@ -6,7 +6,6 @@ M.options = {}
 
 M.paths = {
   emoji = "emoji.nvim/lua/data/emojis.json",
-  kaomoji = "emoji.nvim/lua/data/kaomojis.json",
 }
 
 function M.setup(options)

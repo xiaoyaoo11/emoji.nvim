@@ -30,12 +30,8 @@ FEATURES                                                 *emoji.nvim-features*
 
 - Automatic updates of available emojis via GitHub actions (emojis-api.com <https://emoji-api.com/> as source).
 - No dependencies (relies on `vim.ui.select`).
-- (Optional) fzf-lua <https://github.com/ibhagwan/fzf-lua> integration with `require("fzf-lua").register_ui_select()` (register fzf-lua as the UI interface for vim.ui.select)
-- (Optional) Snacks Picker <https://github.com/folke/snacks.nvim/blob/main/docs/picker.md> integration with `ui_select = true` (default) to replace vim.ui.select
 - (Optional) telescope.nvim <https://github.com/nvim-telescope/telescope.nvim> integration (emojis only).
 - (Optional) nvim-cmp <https://github.com/hrsh7th/nvim-cmp> integration (emojis only).
-- (Optional) blink.cmp <https://github.com/Saghen/blink.cmp> integration via blink.compat <https://github.com/saghen/blink.compat> (emojis only).
-
 
 SCREENSHOTS                                           *emoji.nvim-screenshots*
 
@@ -46,8 +42,7 @@ With Lazy.nvim <https://github.com/folke/lazy.nvim>
 
 >lua
     {
-      "allaman/emoji.nvim",
-      version = "1.0.0", -- optionally pin to a tag
+      "xiaoyaoo11/emoji.nvim",
       ft = "markdown", -- adjust to your needs
       dependencies = {
         -- util for handling paths
@@ -56,8 +51,6 @@ With Lazy.nvim <https://github.com/folke/lazy.nvim>
         "hrsh7th/nvim-cmp",
         -- optional for telescope integration
         "nvim-telescope/telescope.nvim",
-        -- optional for fzf-lua integration via vim.ui.select
-        "ibhagwan/fzf-lua",
       },
       opts = {
         -- default is false, also needed for blink.cmp integration!
@@ -68,9 +61,6 @@ With Lazy.nvim <https://github.com/folke/lazy.nvim>
       },
       config = function(_, opts)
         require("emoji").setup(opts)
-        -- optional for telescope integration
-        local ts = require('telescope').load_extension 'emoji'
-        vim.keymap.set('n', '<leader>se', ts.emoji, { desc = '[S]earch [E]moji' })
       end,
     }
 <
@@ -79,9 +69,6 @@ Fornvim-cmp integration add `emoji` to your list of sources:
 
 >lua
     local sources = {
-      { name = "nvim_lsp" },
-      { name = "buffer", keyword_length = 5 },
-      { name = "luasnip" },
       { name = "emoji" },
     }
 <
@@ -92,36 +79,6 @@ For telescope integration load the extension via:
     require("telescope").load_extension("emoji")
 <
 
-blink.cmp integration:
-
->lua
-    {
-      "saghen/blink.cmp",
-      optional = true,
-      dependencies = { "allaman/emoji.nvim", "saghen/blink.compat" },
-      opts = {
-        sources = {
-          default = { "emoji" },
-          providers = {
-            emoji = {
-              name = "emoji",
-              module = "blink.compat.source",
-              -- overwrite kind of suggestion
-              transform_items = function(ctx, items)
-                local kind = require("blink.cmp.types").CompletionItemKind.Text
-                for i = 1, #items do
-                  items[i].kind = kind
-                end
-                return items
-              end,
-            },
-          },
-        },
-      },
-    }
-<
-
-
 USE                                                           *emoji.nvim-use*
 
 
@@ -130,12 +87,6 @@ EMOJIS ~
 1. `:Emoji` and `:Emoji insert` respective `lua require("emoji").insert()` or `:Emoji by-group` respective `lua require("emoji").insert_by_group()` allows you to select an emoji that is inserted at your cursor’s current position.
 2. `:Telescope emoji` does the same but invokes Telescope instead of `vim.ui.select`. (if telescope.nvim is installed and the extension loaded).
 3. While in insert mode typing `:` triggers the auto-completion of nvim-cmp. (if nvim-cmp integration is enabled and configured).
-
-
-KAOMOJIS ~
-
-1. `:Emoji kaomoji` respective `lua require("emoji").insert_kaomoji()`
-2. `:Emoji kaomoji-by-group` respective `lua require("emoji").insert_kaomoji_by_group()`
 
 You can also create key bindings to your liking.
 
